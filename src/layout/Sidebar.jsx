@@ -1,24 +1,19 @@
 import { createElement } from 'react'
-import { LayoutDashboard, FilePlus2, ListChecks, Sheet } from 'lucide-react'
 import { NavLink } from 'react-router'
+import { roleConfig } from './roleConfig'
 
-const navItems = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/new-entry', label: 'New Entry', icon: FilePlus2 },
-  { to: '/my-entries', label: 'My Entries', icon: ListChecks },
-  { to: '/preview', label: 'Preview', icon: Sheet },
-]
+export default function Sidebar({ role }) {
+  const activeRoleConfig = roleConfig[role] || roleConfig.user
 
-export default function Sidebar() {
   return (
     <aside className="w-full border-r border-slate-200 bg-white md:w-64">
       <div className="border-b border-slate-200 px-5 py-4">
         <p className="text-xs font-semibold uppercase tracking-wide text-primary-600">AWPB</p>
-        <h2 className="mt-1 text-lg font-semibold text-slate-900">User Entry System</h2>
+        <h2 className="mt-1 text-lg font-semibold text-slate-900">{activeRoleConfig.appTitle}</h2>
       </div>
 
       <nav className="space-y-1 p-3">
-        {navItems.map((item) => (
+        {activeRoleConfig.navItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
