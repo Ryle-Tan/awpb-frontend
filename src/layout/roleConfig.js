@@ -10,20 +10,16 @@ import {
 
 export const roleConfig = {
   user: {
-    appTitle: 'User Entry System',
-    profileName: 'Planning Officer',
-    profileEmail: 'awpb.user@example.org',
+    appTitle: 'AWPB User Entry System',
     navItems: [
       { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-      { to: '/new-entry', label: 'New Entry', icon: FilePlus2 },
+      { to: '/new-entry', label: 'New AWPB Entry', icon: FilePlus2 },
       { to: '/my-entries', label: 'My Entries', icon: ListChecks },
       { to: '/preview', label: 'Preview', icon: Sheet },
     ],
   },
   admin: {
-    appTitle: 'Admin Review Console',
-    profileName: 'AWPB Admin',
-    profileEmail: 'awpb.admin@example.org',
+    appTitle: 'AWPB Review and Approval Console',
     navItems: [
       { to: '/', label: 'Admin Dashboard', icon: ShieldCheck },
       { to: '/all-entries', label: 'All Entries', icon: TableProperties },
