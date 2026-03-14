@@ -1,6 +1,6 @@
+import { useMemo, useState } from 'react'
 import { Navigate, Route, Routes } from 'react-router'
 import AppLayout from './layout/AppLayout'
-import { mockRole } from './data/mockData'
 import DashboardPage from './pages/DashboardPage'
 import MyEntriesPage from './pages/MyEntriesPage'
 import NewEntryPage from './pages/NewEntryPage'
@@ -9,30 +9,20 @@ import AdminDashboardPage from './pages/admin/AdminDashboardPage'
 import AllEntriesPage from './pages/admin/AllEntriesPage'
 import ReviewEntriesPage from './pages/admin/ReviewEntriesPage'
 
-const role = mockRole
-const isAdmin = role === 'admin'
-
 export default function App() {
+  const [role, setRole] = useState('user')
+  const homeElement = useMemo(() => (role === 'admin' ? <AdminDashboardPage /> : <DashboardPage />), [role])
+
   return (
     <Routes>
-      <Route element={<AppLayout role={role} />}>
-        {isAdmin ? (
-          <>
-            <Route path="/" element={<AdminDashboardPage />} />
-            <Route path="/all-entries" element={<AllEntriesPage />} />
-            <Route path="/review-entries" element={<ReviewEntriesPage />} />
-            <Route path="/preview" element={<PreviewPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </>
-        ) : (
-          <>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/new-entry" element={<NewEntryPage />} />
-            <Route path="/my-entries" element={<MyEntriesPage />} />
-            <Route path="/preview" element={<PreviewPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </>
-        )}
+      <Route element={<AppLayout role={role} onRoleChange={setRole} />}>
+        <Route path="/" element={homeElement} />
+        <Route path="/new-entry" element={<NewEntryPage />} />
+        <Route path="/my-entries" element={<MyEntriesPage />} />
+        <Route path="/all-entries" element={<AllEntriesPage />} />
+        <Route path="/review-entries" element={<ReviewEntriesPage />} />
+        <Route path="/preview" element={<PreviewPage role={role} />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
   )

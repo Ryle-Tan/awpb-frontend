@@ -1,34 +1,59 @@
 import Card from '../components/Card'
 import PageHeader from '../components/PageHeader'
-import { previewColumns, previewRows } from '../data/mockData'
+import { consolidatedPreviewRows } from '../data/mockData'
 import { formatPeso } from '../utils/currency'
 
-export default function PreviewPage() {
+const monthHeaders = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+export default function PreviewPage({ role = 'user' }) {
   return (
     <div>
-      <PageHeader title="Preview" subtitle="Read-only spreadsheet view of prepared values" />
+      <PageHeader
+        title="AWPB Consolidated Preview"
+        subtitle={
+          role === 'admin'
+            ? 'Read-only consolidated report of all submitted entries for management review.'
+            : 'Read-only preview of encoded entries in report format prior to final consolidation.'
+        }
+      />
 
       <Card>
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">Program and Activity Summary Report</h2>
+            <p className="text-sm text-slate-500">Targets and budget distribution by activity, component, and fund source</p>
+          </div>
+        </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse text-sm">
-            <thead>
-              <tr className="bg-slate-100 text-slate-600">
-                {previewColumns.map((column) => (
-                  <th key={column} className="border border-slate-200 px-4 py-2 text-left font-medium">
-                    {column}
-                  </th>
+          <table className="min-w-[1400px] text-xs">
+            <thead className="bg-slate-50 text-slate-600">
+              <tr>
+                <th className="px-3 py-2 text-left font-semibold">Component / Key Activity</th>
+                <th className="px-3 py-2 text-left font-semibold">Activity Title</th>
+                <th className="px-3 py-2 text-left font-semibold">Expected Output</th>
+                {monthHeaders.map((month) => (
+                  <th key={month} className="px-2 py-2 text-right font-semibold">{month}</th>
                 ))}
+                <th className="px-3 py-2 text-right font-semibold">Total Physical Target</th>
+                <th className="px-3 py-2 text-right font-semibold">Total Budget</th>
+                <th className="px-3 py-2 text-left font-semibold">Fund Source</th>
               </tr>
             </thead>
             <tbody>
-              {previewRows.map((row) => (
-                <tr key={row.category} className="hover:bg-slate-50">
-                  <td className="border border-slate-200 px-4 py-2 font-medium text-slate-700">{row.category}</td>
-                  {['jan', 'feb', 'mar', 'apr', 'total'].map((key) => (
-                    <td key={key} className={`border border-slate-200 px-4 py-2 ${key === 'total' ? 'font-semibold text-slate-900' : ''}`}>
-                      {row.isCurrency ? formatPeso(row[key]) : row[key].toLocaleString('en-PH')}
-                    </td>
+              {consolidatedPreviewRows.map((row) => (
+                <tr key={row.activityTitle} className="border-t border-slate-100 hover:bg-slate-50/70">
+                  <td className="px-3 py-2 text-slate-700">
+                    <p className="font-semibold">{row.component}</p>
+                    <p className="text-slate-500">{row.keyActivity}</p>
+                  </td>
+                  <td className="px-3 py-2 text-slate-700">{row.activityTitle}</td>
+                  <td className="px-3 py-2 text-slate-700">{row.expectedOutput}</td>
+                  {row.monthly.map((value, index) => (
+                    <td key={`${row.activityTitle}-${index}`} className="px-2 py-2 text-right text-slate-700">{value.toLocaleString('en-PH')}</td>
                   ))}
+                  <td className="px-3 py-2 text-right font-semibold text-slate-900">{row.totalPhysicalTarget.toLocaleString('en-PH')}</td>
+                  <td className="px-3 py-2 text-right font-semibold text-slate-900">{formatPeso(row.totalBudget)}</td>
+                  <td className="px-3 py-2 text-slate-700">{row.fundSource}</td>
                 </tr>
               ))}
             </tbody>
